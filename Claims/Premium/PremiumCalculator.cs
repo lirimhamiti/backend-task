@@ -4,6 +4,8 @@
     {
         public decimal Calculate(CoverType coverType, DateTime startDate, DateTime endDate)
         {
+            var insuranceDays = (endDate - startDate).Days;
+
             var baseDayRate = 1250m;
             var totalPremium = 0m;
 
@@ -23,22 +25,19 @@
             }
 
             var premiumRateDay = baseDayRate * multiplier;
-            var insuranceDays = (endDate- startDate).TotalDays;
 
             for (var i = 0; i<insuranceDays; i++)
             {
                 if (i < 30) totalPremium += premiumRateDay;
 
-                if (i >= 30 && i < 180)
+                else if (i < 180)
                 {
-                    if (coverType == CoverType.Yacht) { totalPremium += premiumRateDay * 0.95m; }
-                    else { totalPremium += premiumRateDay * 0.98m; }
+                    totalPremium += coverType == CoverType.Yacht ? premiumRateDay * 0.95m : premiumRateDay * 0.98m;
                 }
 
                 else
                 {
-                    if (coverType == CoverType.Yacht) { totalPremium += premiumRateDay * 0.97m; }
-                    else { totalPremium += premiumRateDay * 0.99m; }
+                    totalPremium += coverType == CoverType.Yacht ? premiumRateDay * 0.92m : premiumRateDay * 0.97m;
                 }
             }
 
