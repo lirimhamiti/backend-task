@@ -4,8 +4,7 @@
     {
         public decimal Calculate(CoverType coverType, DateTime startDate, DateTime endDate)
         {
-            var insuranceDays = (endDate - startDate).Days;
-
+            var insuranceDays = (endDate.Date - startDate.Date).Days;
             var baseDayRate = 1250m;
             var totalPremium = 0m;
 
