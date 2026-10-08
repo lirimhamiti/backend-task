@@ -1,5 +1,5 @@
 ﻿using Claims.Data;
-using MongoDB.Driver.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Claims.Repositories
 {
