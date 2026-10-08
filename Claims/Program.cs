@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using Testcontainers.MongoDb;
 using Testcontainers.MsSql;
+using System.Threading.Channels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,8 +48,10 @@ builder.Services.AddDbContext<ClaimsContext>(options =>
     options.UseMongoDB(database.Client, database.DatabaseNamespace.DatabaseName);
 });
 
-builder.Services.AddScoped<IAuditer, Auditer>();
-builder.Services.AddScoped<IClaimRepository, ClaimRepository>();
+builder.Services.AddSingleton(Channel.CreateUnbounded<AuditMessage>());
+builder.Services.AddSingleton<IAuditer, Auditer>();
+builder.Services.AddHostedService<AuditBackgroundService>(); builder.Services.AddScoped<IClaimRepository, ClaimRepository>();
+
 builder.Services.AddScoped<IClaimService, ClaimService>();
 builder.Services.AddScoped<ICoverRepository, CoverRepository>();
 builder.Services.AddScoped<ICoverService, CoverService>();
