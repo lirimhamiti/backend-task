@@ -1,8 +1,8 @@
 using Claims.Auditing;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Claims.Data;
 using Claims.Services;
+using Claims.Contracts;
 
 namespace Claims.Controllers;
 
@@ -37,9 +37,9 @@ public class CoversController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateAsync(Cover cover)
+    public async Task<ActionResult<Cover>> CreateAsync(CreateCoverRequest request)
     {
-        var created = await _coverService.CreateAsync(cover);
+        var created = await _coverService.CreateAsync(request.ToCover());
         return Created($"/Covers/{created.Id}", created);
     }
 

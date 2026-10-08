@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Claims.Data;
 using MongoDB.Driver.Linq;
 using Claims.Services;
+using Claims.Contracts;
 
 namespace Claims.Controllers
 {
@@ -33,10 +34,10 @@ namespace Claims.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> CreateAsync(Claim claim)
+        public async Task<ActionResult<Claim>> CreateAsync(CreateClaimRequest request)
         {
-            var createdClaim = await _claimService.CreateAsync(claim);
-            return Created($" /Claims/ {createdClaim.Id}", createdClaim);
+            var created = await _claimService.CreateAsync(request.ToClaim());
+            return Created($"/Claims/{created.Id}", created);
         }
 
         [HttpDelete("{id}")]
