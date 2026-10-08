@@ -8,6 +8,7 @@ using Testcontainers.MongoDb;
 using Testcontainers.MsSql;
 using Claims.Repositories;
 using Claims.Services;
+using Claims.Premium;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,9 @@ builder.Services.AddDbContext<ClaimsContext>(options =>
 builder.Services.AddScoped<IAuditer, Auditer>();
 builder.Services.AddScoped<IClaimRepository, ClaimRepository>();
 builder.Services.AddScoped<IClaimService, ClaimService>();
+builder.Services.AddScoped<ICoverRepository, CoverRepository>();
+builder.Services.AddScoped<ICoverService, CoverService>();
+builder.Services.AddSingleton<IPremiumCalculator, PremiumCalculator>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
