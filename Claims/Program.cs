@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using Testcontainers.MongoDb;
 using Testcontainers.MsSql;
+using Claims.Repositories;
+using Claims.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +43,10 @@ builder.Services.AddDbContext<ClaimsContext>(options =>
     var database = client.GetDatabase(builder.Configuration["MongoDb:DatabaseName"]); // Use a default/test database name
     options.UseMongoDB(database.Client, database.DatabaseNamespace.DatabaseName);
 });
+
+builder.Services.AddScoped<IAuditer, Auditer>();
+builder.Services.AddScoped<IClaimRepository, ClaimRepository>();
+builder.Services.AddScoped<IClaimService, ClaimService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

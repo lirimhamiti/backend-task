@@ -2,6 +2,7 @@ using Claims.Auditing;
 using Microsoft.AspNetCore.Mvc;
 using Claims.Data;
 using MongoDB.Driver.Linq;
+using Claims.Services;
 
 namespace Claims.Controllers
 {
@@ -9,51 +10,43 @@ namespace Claims.Controllers
     [Route("[controller]")]
     public class ClaimsController : ControllerBase
     {
-        private readonly ILogger<ClaimsController> _logger;
-        private readonly ClaimsContext _claimsContext;
-        private readonly Auditer _auditer;
+     
+        private readonly IClaimService _claimService;
 
-        public ClaimsController(ILogger<ClaimsController> logger, ClaimsContext claimsContext, AuditContext auditContext)
+        public ClaimsController(IClaimService claimService)
         {
-            _logger = logger;
-            _claimsContext = claimsContext;
-            _auditer = new Auditer(auditContext);
+        _claimService = claimService;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Claim>> GetAsync()
+        public async Task<ActionResult<Claim>> GetAsync()
         {
-            return await _claimsContext.Claims.ToListAsync();
+            return Ok(await _claimService.GetAllAsync());
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Claim>> GetAsync(string id)
+        {
+            var claim = await _claimService.GetByIdAsync(id);
+            return claim != null ? Ok(claim) : NotFound();
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> CreateAsync(Claim claim)
         {
-            claim.Id = Guid.NewGuid().ToString();
-            _claimsContext.Claims.Add(claim);
-            await _claimsContext.SaveChangesAsync();
-            _auditer.AuditClaim(claim.Id, "POST");
-            return Ok(claim);
+            var createdClaim = await _claimService.CreateAsync(claim);
+            return Created($" /Claims/ {createdClaim.Id}", createdClaim);
         }
 
         [HttpDelete("{id}")]
-        public async Task DeleteAsync(string id)
+        public async Task<IActionResult> DeleteAsync(string id)
         {
-            _auditer.AuditClaim(id, "DELETE");
-            var claim = await _claimsContext.Claims.SingleOrDefaultAsync(cl => cl.Id == id);
-            if (claim != null)
-            {
-                _claimsContext.Claims.Remove(claim);
-                await _claimsContext.SaveChangesAsync();
-            }
+            var deleted = await _claimService.DeleteAsync(id);
+            return deleted ? NoContent() : NotFound();
         }
 
-        [HttpGet("{id}")]
-        public async Task<Claim> GetAsync(string id)
-        {
-            var claim = await _claimsContext.Claims.SingleOrDefaultAsync(cl => cl.Id == id);
-            return claim;
-        }
+
     }
 
    
