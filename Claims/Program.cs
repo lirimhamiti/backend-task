@@ -1,15 +1,16 @@
 using Claims.Auditing;
 using Claims.Data;
+using Claims.Premium;
+using Claims.Repositories;
+using Claims.Services;
+using Claims.Validation;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using Testcontainers.MongoDb;
 using Testcontainers.MsSql;
-using Claims.Repositories;
-using Claims.Services;
-using Claims.Premium;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,7 +52,11 @@ builder.Services.AddScoped<IClaimRepository, ClaimRepository>();
 builder.Services.AddScoped<IClaimService, ClaimService>();
 builder.Services.AddScoped<ICoverRepository, CoverRepository>();
 builder.Services.AddScoped<ICoverService, CoverService>();
+builder.Services.AddScoped<ICoverValidator, CoverValidator>();
+builder.Services.AddScoped<IClaimValidator, ClaimValidator>();
 builder.Services.AddSingleton<IPremiumCalculator, PremiumCalculator>();
+builder.Services.AddSingleton(TimeProvider.System);
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Claims.Data;
 using Claims.Services;
 using Claims.Contracts;
+using Claims.Validation;
 
 namespace Claims.Controllers;
 
@@ -39,8 +40,15 @@ public class CoversController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Cover>> CreateAsync(CreateCoverRequest request)
     {
-        var created = await _coverService.CreateAsync(request.ToCover());
-        return Created($"/Covers/{created.Id}", created);
+        try
+        {
+            var created = await _coverService.CreateAsync(request.ToCover());
+            return Created($"/Covers/{created.Id}", created);
+        }
+        catch (ValidationException ex)
+        {
+            return ValidationProblem(new ValidationProblemDetails(ex.Errors));
+        }
     }
 
     [HttpDelete("{id}")]

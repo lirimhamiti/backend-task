@@ -4,6 +4,7 @@ using Claims.Data;
 using MongoDB.Driver.Linq;
 using Claims.Services;
 using Claims.Contracts;
+using Claims.Validation;
 
 namespace Claims.Controllers
 {
@@ -36,8 +37,15 @@ namespace Claims.Controllers
         [HttpPost]
         public async Task<ActionResult<Claim>> CreateAsync(CreateClaimRequest request)
         {
-            var created = await _claimService.CreateAsync(request.ToClaim());
-            return Created($"/Claims/{created.Id}", created);
+            try
+            {
+                var created = await _claimService.CreateAsync(request.ToClaim());
+                return Created($"/Claims/{created.Id}", created);
+            }
+            catch (ValidationException ex)
+            {
+                return ValidationProblem(new ValidationProblemDetails(ex.Errors));
+            }
         }
 
         [HttpDelete("{id}")]

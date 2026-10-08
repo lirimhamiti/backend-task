@@ -1,5 +1,6 @@
 ﻿using Claims.Auditing;
 using Claims.Repositories;
+using Claims.Validation;
 
 namespace Claims.Services;
 
@@ -7,11 +8,13 @@ namespace Claims.Services;
 {
     private readonly IClaimRepository _claimrepository;
     private readonly IAuditer _auditer;
+    private readonly IClaimValidator _validator;
 
-    public ClaimService(IClaimRepository claimrepository, IAuditer auditer)
+    public ClaimService(IClaimRepository claimrepository, IAuditer auditer, IClaimValidator validator)
     {
         _claimrepository = claimrepository;
         _auditer = auditer;
+        _validator = validator;
     }
 
     public Task<IEnumerable<Claim>> GetAllAsync()
@@ -26,6 +29,9 @@ namespace Claims.Services;
 
     public async Task<Claim> CreateAsync(Claim claim)
     {
+        var errors = await _validator.ValidateAsync(claim);
+        if (errors.Count > 0) throw new ValidationException(errors);
+
         claim.Id = Guid.NewGuid().ToString();
         await _claimrepository.AddAsync(claim);
         _auditer.AuditClaim(claim.Id, "POST");
