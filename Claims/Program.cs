@@ -9,6 +9,7 @@ using Testcontainers.MsSql;
 using Claims.Repositories;
 using Claims.Services;
 using Claims.Premium;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,8 +55,11 @@ builder.Services.AddSingleton<IPremiumCalculator, PremiumCalculator>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+builder.Services.AddSwaggerGen(options =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFile));
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
