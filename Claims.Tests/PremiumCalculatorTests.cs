@@ -15,8 +15,8 @@ namespace Claims.Tests;
     private static readonly DateTime Start = new(2030, 1, 1);
 
     [Theory]
-    [InlineData(CoverType.Yacht, 10, 13750)]          
-    [InlineData(CoverType.PassengerShip, 10, 15000)]  
+    [InlineData(CoverType.Yacht, 5, 6875)]          
+    [InlineData(CoverType.PassengerShip, 5, 7500)]  
     [InlineData(CoverType.Tanker, 10, 18750)]         
     [InlineData(CoverType.ContainerShip, 10, 16250)]  
     [InlineData(CoverType.BulkCarrier, 10, 16250)]    
@@ -28,9 +28,9 @@ namespace Claims.Tests;
     }
 
     [Theory]
-    [InlineData(CoverType.Yacht, 180, 237187.5)]   
+    [InlineData(CoverType.Yacht, 120, 158812.5)]   
     [InlineData(CoverType.Tanker, 180, 331875)]    
-    public void Days31To180_AreDiscounted(CoverType type, int days, double expected)
+    public void DiscountForDays_31to180(CoverType type, int days, double expected)
     {
         var premium = _calculator.Calculate(type, Start, Start.AddDays(days));
 
@@ -40,7 +40,7 @@ namespace Claims.Tests;
     [Theory]
     [InlineData(CoverType.Yacht, 365, 471212.5)]   
     [InlineData(CoverType.Tanker, 365, 668343.75)] 
-    public void DaysAfter180_HaveAdditionalDiscount(CoverType type, int days, double expected)
+    public void ExtraDiscountAfter180days(CoverType type, int days, double expected)
     {
         var premium = _calculator.Calculate(type, Start, Start.AddDays(days));
 
