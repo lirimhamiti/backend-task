@@ -299,3 +299,6 @@ __pycache__/
 
 # kdiff3 temp files
 *.orig
+
+# ef core context is in this folder
+!Claims/Data/
