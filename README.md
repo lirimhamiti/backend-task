@@ -1,4 +1,4 @@
-\# CLAIMS API
+## CLAIMS API
 
 Backend code application for insurance claims handling. Users can make operations like creating, reading and deleting COVERS (ship insurance) and CLAIMS (damage reports).
 
@@ -12,7 +12,8 @@ Build with .NET 9, ASP.NET Core, EF Core, MongoDB and SQL Server.
 
 
 
-\## HOW TO START THE APP
+## HOW TO START APP
+
 
 \~\~Needs\~\~ .NET 9 SDK and Docker Desktop (running mode)
 
@@ -35,7 +36,7 @@ The first start can take around 10 minutes while the images are downloaded.
 
 
 
-\## HOW TO RUN TESTS
+## HOW TO RUN TESTS
 
 
 
@@ -57,7 +58,7 @@ There are two types of tests:
 
 
 
-\## Things that i changed
+## WHAT I CHANGED
 
 The cloned template didn't start at the first try, so i fixed a few things: the audit entities didn't match migration, `BsonDateTimeOptions(DateOnly)` isn't supported by the Mongo EF provider, and `.gitignore` was ignoring the `Data` folder.
 
