@@ -14,7 +14,7 @@ namespace Claims.Tests;
     {
         var cover = new Cover { Id = "test-cover", StartDate = new(2030, 1, 1), EndDate = new(2030, 6, 30) };
         var coverRepository = new Mock<ICoverRepository>();
-        coverRepository.Setup(r => r.GetByIdAsync("cover-1")).ReturnsAsync(cover);
+        coverRepository.Setup(r => r.GetByIdAsync("test-cover")).ReturnsAsync(cover);
 
         _validator = new ClaimValidator(coverRepository.Object);
     }
