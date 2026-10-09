@@ -73,6 +73,7 @@ Split the code into separated things/responsibilities: controllers, services and
 
 
 \*\*Task 2
+
 Added validators for clams and covers based on the rules written on the task.
 
 
@@ -96,6 +97,7 @@ Unit tests for the auditer (using moq), premium calculation formulas, validators
 
 
 \*\*Task 5
+
 The old loop of the calculation charged some days two or three times because the if statements weren't chained with else. Fixed it and added tests. I calculated the expected values by hand from the rules/formulas in the task and then tested from the unit tests.
 
 
